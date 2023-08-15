@@ -1,6 +1,6 @@
-envs=(halfcheetah-random-v2 halfcheetah-expert-v2)
-tau=(0.00001 0.0001 0.001 0.1)
-alphas=(5 10 20 50)
+envs=(antmaze-medium-diverse-v0 antmaze-medium-play-v0)
+tau=(0.0001 0.01 0.1 1)
+cql_target_action_gaps=(0.1 1 5 10)
 seeds=(42)
 num_exps=0
 gpus=(0 1 2 3 4 5 6 7)
@@ -8,7 +8,7 @@ gpus=(0 1 2 3 4 5 6 7)
 for seed in "${seeds[@]}"; do
 for env in "${envs[@]}"; do
 for t in "${tau[@]}"; do
-for a in "${alphas[@]}"; do
+for a in "${cql_target_action_gaps[@]}"; do
     which_gpu=$((num_exps % ${#gpus[@]}))
     gpu=${gpus[$which_gpu]}
     export CUDA_VISIBLE_DEVICES=$gpu
@@ -18,10 +18,11 @@ for a in "${alphas[@]}"; do
         --env $env \
         --logging.output_dir './experiment_output' \
         --logging.online True \
-        --logging.project 'ReDS_D4RL_SmallerTemp' \
+        --logging.project 'ReDS_antmaze' \
         --seed $seed \
         --cql.reds_temp $t \
-        --cql.cql_min_q_weight $a"
+        --cql.cql_lagrange True \
+        --cql.cql_target_action_gap $a"
     echo $command
     eval $command &
 
