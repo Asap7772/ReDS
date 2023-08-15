@@ -183,9 +183,7 @@ class GaussianPolicy(nn.Module):
         mean, log_std = jnp.split(base_network_output, 2, axis=-1)
         log_std = self.log_std_multiplier_module() * log_std + self.log_std_offset_module()
         log_std = jnp.clip(log_std, -20.0, 2.0)
-        action_distribution = distrax.Transformed(
-            distrax.MultivariateNormalDiag(mean, jnp.exp(log_std)),
-        )
+        action_distribution = distrax.MultivariateNormalDiag(mean, jnp.exp(log_std))
         if deterministic:
             samples = jnp.tanh(mean)
             log_prob = action_distribution.log_prob(samples)
