@@ -156,6 +156,13 @@ class ConservativeSAC(object):
                     *args, **kwargs,
                     rngs=JaxRNG(rng)(self.policy.rng_keys())
                 )
+            
+            @wrap_function_with_rng(rng_generator())
+            def forward_mu(rng, *args, **kwargs):
+                return self.mu.apply(
+                    *args, **kwargs,
+                    rngs=JaxRNG(rng)(self.mu.rng_keys())
+                )
 
             @wrap_function_with_rng(rng_generator())
             def forward_qf(rng, *args, **kwargs):
@@ -188,7 +195,7 @@ class ConservativeSAC(object):
             loss_collection['policy'] = policy_loss
 
             """ Mu loss """
-            mu_log_probs = forward_policy(train_params['mu'], observations, actions, method=self.mu.log_prob)
+            mu_log_probs = forward_mu(train_params['mu'], observations, actions, method=self.mu.log_prob)
 
             # now calculate advantage
             q1_pred = forward_qf(train_params['qf1'], observations, actions)
@@ -253,7 +260,7 @@ class ConservativeSAC(object):
                 cql_next_actions, cql_next_log_pis = forward_policy(
                     train_params['policy'], next_observations, repeat=self.config.cql_n_actions,
                 )
-                mu_actions, mu_log_probs = forward_policy(
+                mu_actions, mu_log_probs = forward_mu(
                     train_params['mu'], observations, repeat=self.config.cql_n_actions,
                 )
 
