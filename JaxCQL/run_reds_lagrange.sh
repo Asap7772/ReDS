@@ -23,7 +23,7 @@ for a in "${cql_target_action_gaps[@]}"; do
     --cql.reds_temp $t \
     --cql.cql_lagrange True \
     --cql.cql_min_q_weight=5.0 \
-    --cql.cql_target_action_gap=0.8 \
+    --cql.cql_target_action_gap=$a \
     --policy_arch=256-256 \
     --qf_arch=256-256-256-256 \
     --eval_n_trajs=20 \
@@ -31,7 +31,7 @@ for a in "${cql_target_action_gaps[@]}"; do
     --reward_bias=-5"
 
     echo $command
-    eval $command &
+    # eval $command &
 
     sleep 30 # wait for the experiment to start
     num_exps=$((num_exps+1))
