@@ -154,7 +154,8 @@ class GaussianPolicy(nn.Module):
     arch: str = '256-256'
     orthogonal_init: bool = False
     log_std_multiplier: float = 1.0
-    log_std_offset: float = -1.0
+    log_std_offset: float = 0
+    fixed_std: float = 0.1
 
     def setup(self):
         self.base_network = FullyConnectedNetwork(
@@ -168,8 +169,13 @@ class GaussianPolicy(nn.Module):
             observations = extend_and_repeat(observations, 1, actions.shape[1])
         base_network_output = self.base_network(observations)
         mean, log_std = jnp.split(base_network_output, 2, axis=-1)
-        log_std = self.log_std_multiplier_module() * log_std + self.log_std_offset_module()
-        log_std = jnp.clip(log_std, -20.0, 2.0)
+
+        if self.fixed_std > 0: 
+            log_std = jnp.ones_like(log_std) * jnp.log(self.fixed_std)
+        else:
+            log_std = self.log_std_multiplier_module() * log_std + self.log_std_offset_module()
+            log_std = jnp.clip(log_std, -20.0, 2.0)
+
         action_distribution = distrax.Transformed(
             distrax.MultivariateNormalDiag(mean, jnp.exp(log_std)),
             distrax.Block(distrax.Tanh(), ndims=1)

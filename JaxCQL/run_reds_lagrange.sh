@@ -1,7 +1,7 @@
-envs=(antmaze-medium-diverse-v0 antmaze-medium-play-v0)
+envs=(antmaze-medium-diverse-v2 antmaze-medium-play-v2)
 tau=(0.0001 0.01 0.1 1)
-cql_target_action_gaps=(0.1 0.5 0.8 2)
-seeds=(42)
+cql_target_action_gaps=(0.1 0.5 0.8 1.6 3.2)
+seeds=(42 24)
 num_exps=0
 gpus=(0 1 2 3 4 5 6 7)
 
@@ -18,7 +18,7 @@ for a in "${cql_target_action_gaps[@]}"; do
     --env $env \
     --logging.output_dir './experiment_output' \
     --logging.online True \
-    --logging.project 'ReDS_antmaze_arch' \
+    --logging.project 'ReDS_antmaze_arch_fixedstd' \
     --seed $seed \
     --cql.reds_temp $t \
     --cql.cql_lagrange True \
@@ -31,7 +31,7 @@ for a in "${cql_target_action_gaps[@]}"; do
     --reward_bias=-5"
 
     echo $command
-    # eval $command &
+    eval $command &
 
     sleep 30 # wait for the experiment to start
     num_exps=$((num_exps+1))

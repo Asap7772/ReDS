@@ -1,4 +1,4 @@
-envs=(antmaze-medium-diverse-v0 antmaze-medium-play-v0)
+envs=(antmaze-medium-diverse-v2 antmaze-medium-play-v2)
 cql_target_action_gaps=(0.8)
 seeds=(42)
 num_exps=0
