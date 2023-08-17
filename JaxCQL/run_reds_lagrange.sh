@@ -18,7 +18,7 @@ for a in "${cql_target_action_gaps[@]}"; do
     --env $env \
     --logging.output_dir './experiment_output' \
     --logging.online True \
-    --logging.project 'ReDS_antmaze_arch_fixedstd' \
+    --logging.project 'ReDS_antmaze_lse' \
     --seed $seed \
     --cql.reds_temp $t \
     --cql.cql_lagrange True \

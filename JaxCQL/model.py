@@ -155,7 +155,7 @@ class GaussianPolicy(nn.Module):
     orthogonal_init: bool = False
     log_std_multiplier: float = 1.0
     log_std_offset: float = 0
-    fixed_std: float = 0.1
+    fixed_std: float = 0
 
     def setup(self):
         self.base_network = FullyConnectedNetwork(

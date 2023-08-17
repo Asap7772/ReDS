@@ -288,13 +288,15 @@ class ConservativeSAC(object):
                     cql_cat_q1 = jnp.concatenate(
                         [cql_q1_rand - random_density,
                          cql_q1_next_actions - cql_next_log_pis,
-                         cql_q1_current_actions - cql_current_log_pis],
+                         cql_q1_current_actions - cql_current_log_pis,
+                         cql_q1_mu_actions - mu_log_probs],
                         axis=1
                     )
                     cql_cat_q2 = jnp.concatenate(
                         [cql_q2_rand - random_density,
                          cql_q2_next_actions - cql_next_log_pis,
-                         cql_q2_current_actions - cql_current_log_pis],
+                         cql_q2_current_actions - cql_current_log_pis,
+                         cql_q2_mu_actions - mu_log_probs],
                         axis=1
                     )
 
@@ -306,18 +308,6 @@ class ConservativeSAC(object):
                     jax.scipy.special.logsumexp(cql_cat_q2 / self.config.cql_temp, axis=1)
                     * self.config.cql_temp
                 )
-
-                # Average over mu terms
-                cql_qf1_mu_lse = (
-                    jax.scipy.special.logsumexp((cql_q1_mu_actions - mu_log_probs)/ self.config.cql_temp, axis=1)
-                    * self.config.cql_temp
-                )
-                cql_qf2_mu_lse = (
-                    jax.scipy.special.logsumexp((cql_q2_mu_actions - mu_log_probs) / self.config.cql_temp, axis=1)
-                    * self.config.cql_temp
-                )
-                cql_qf1_ood = 0.5 * (cql_qf1_ood + cql_qf1_mu_lse)
-                cql_qf2_ood = 0.5 * (cql_qf2_ood + cql_qf2_mu_lse)
 
 
                 """Subtract the log likelihood of data"""

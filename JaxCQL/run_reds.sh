@@ -1,7 +1,7 @@
-envs=(halfcheetah-random-v2 halfcheetah-expert-v2)
-tau=(0.00001 0.0001 0.001 0.1)
-alphas=(5 10 20 50)
-seeds=(42)
+envs=(halfcheetah-random-v2 halfcheetah-expert-v2 walker2d-random-v2 walker2d-expert-v2 ant-random-v2 ant-expert-v2)
+tau=(0.0001 0.1)
+alphas=(1 5 10 20)
+seeds=(42 24)
 num_exps=0
 gpus=(0 1 2 3 4 5 6 7)
 
@@ -18,7 +18,7 @@ for a in "${alphas[@]}"; do
         --env $env \
         --logging.output_dir './experiment_output' \
         --logging.online True \
-        --logging.project 'ReDS_D4RL_SmallerTemp' \
+        --logging.project 'ReDS_D4RL_lse' \
         --seed $seed \
         --cql.reds_temp $t \
         --cql.cql_min_q_weight $a"
